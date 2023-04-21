@@ -10,39 +10,25 @@ namespace CSharpTest
     {
         public DateTime Calculate(DateTime startDate, int dayCount, WeekEnd[] weekEnds) //must be "weekends" due to naming rules because it`s a single word:)
         {
-            var weekendsNumber = dayCount - GetDaysNumberWithoutWeekends(startDate, startDate.AddDays(dayCount)); 
-
-            if (weekEnds == null)
-                return startDate.AddDays(dayCount + weekendsNumber);             
-
-            int holidaysCount = 0;
-
-            foreach(var weekend in weekEnds)
+            int workingDdays = 0;
+          
+            while (workingDdays != dayCount)
             {
-                holidaysCount += GetDaysNumberWithoutWeekends(weekend.StartDate, weekend.EndDate); //count these days as holidays
-            }
+                startDate = startDate.AddDays(1);
 
-            return startDate.AddDays(dayCount + weekendsNumber + holidaysCount);         
+                var isHoliday = IsHoliday(startDate, weekEnds);
+
+                if (!IsHoliday(startDate, weekEnds))
+                    workingDdays++;               
+            }
+            return startDate.AddDays(-1);
         }
 
-        private int GetDaysNumberWithoutWeekends(DateTime startDate, DateTime endDate)
+        private bool IsHoliday(DateTime date, WeekEnd[] weekEnds)
         {
-            if (endDate < startDate)
-                throw new ArgumentException("To cannot be smaller than from.", nameof(endDate));
-
-            if (endDate.Date == startDate.Date)
-                return 0;
-
-            int n = 0;
-            DateTime nextDate = startDate;
-            while (nextDate <= endDate.Date)
-            {
-                if (nextDate.DayOfWeek != DayOfWeek.Saturday && nextDate.DayOfWeek != DayOfWeek.Sunday)
-                    n++;
-                nextDate = nextDate.AddDays(1);
-            }
-
-            return n;
+            return weekEnds.Any(x => x.StartDate <= date && x.EndDate >= date);
         }       
+        
+       
     }
 }

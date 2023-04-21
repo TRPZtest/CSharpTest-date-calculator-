@@ -19,7 +19,7 @@ namespace CSharpTest
 
             DateTime result = new WorkDayCalculator().Calculate(startDate, count, null);
 
-            Assert.AreEqual(startDate.AddDays(count-1), result); //must be count + 2 because there 2 weekends 
+            Assert.AreEqual(startDate.AddDays(count - 1), result); //must be count + 1 because there are 2 weekends () 
         }
 
         [TestMethod]
@@ -47,7 +47,7 @@ namespace CSharpTest
                 new WeekEnd(new DateTime(2021, 4, 23), new DateTime(2021, 4, 25)),
                 new WeekEnd(new DateTime(2021, 4, 29), new DateTime(2021, 4, 29))
             };
-            
+
             DateTime result = new WorkDayCalculator().Calculate(startDate, count, weekends);
 
             Assert.IsTrue(result.Equals(new DateTime(2021, 4, 28)));
