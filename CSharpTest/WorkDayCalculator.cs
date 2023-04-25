@@ -10,16 +10,19 @@ namespace CSharpTest
     {
         public DateTime Calculate(DateTime startDate, int dayCount, WeekEnd[] weekEnds) //must be "weekends" due to naming rules because it`s a single word:)
         {
-            int workingDdays = 0;
+            int workingDays = 0;  
+            
+            if (weekEnds == null)
+                return startDate.AddDays(dayCount -1);
           
-            while (workingDdays != dayCount)
-            {
-                startDate = startDate.AddDays(1);
-
+            while (workingDays != dayCount)
+            {           
                 var isHoliday = IsHoliday(startDate, weekEnds);
 
-                if (!IsHoliday(startDate, weekEnds))
-                    workingDdays++;               
+                if (!isHoliday)
+                    workingDays++;
+
+                startDate = startDate.AddDays(1);
             }
             return startDate.AddDays(-1);
         }
